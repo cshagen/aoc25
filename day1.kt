@@ -13,19 +13,11 @@ fun part1(inputFile: String): Int {
 		
 		file.readLines().forEach { turn ->
 			val direction = turn[0]
-			val steps = turn.substring(1).toInt()
+			var steps = turn.substring(1).toInt()
 			
-			when (direction) {
-				'L' -> {
-					position = ((position - steps) % 100 + 100) % 100
-				}
-				'R' -> {
-					position = (position + steps) % 100
-				}
-			}
-			if (position == 0) {
-				zeros += 1
-			}
+			if (direction == 'L') steps = -steps
+			position = ((position + steps) % 100 + 100) % 100
+			if (position == 0) zeros += 1
 		}
 		return zeros
 }
@@ -37,23 +29,18 @@ fun part2(inputFile: String): Int {
 		
 		file.readLines().forEach { turn ->
 			val direction = turn[0]
-			val steps = turn.substring(1).toInt()
+			var steps = turn.substring(1).toInt()
+			val oldposition = position
 			
-			when (direction) {
-				'L' -> {
-					if(position <= steps) {
-						zeros  -= (position - steps) / 100 
-						if (position != 0) {
-							zeros += 1
-						}
-					}
-					position = ((position - steps) % 100 + 100) % 100
-				}
-				'R' -> {
-					zeros += (position + steps) / 100
-					position = (position + steps) % 100
-				}
+			if (direction == 'L') steps = -steps
+			position += steps
+			if (position == 0) zeros += 1
+			else if (position >= 100) zeros += position / 100
+			else if (position < 0) {
+				zeros -= (position / 100)  
+				if (oldposition != 0) zeros += 1
 			}
+			position = ((position % 100) + 100) % 100
 		}
 		return zeros
 }
