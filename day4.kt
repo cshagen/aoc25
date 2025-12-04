@@ -30,7 +30,6 @@ fun part2(inputFile: String): Int {
 		file.readLines().forEach { line ->
 				matrix.add(line.toCharArray())
 		}
-		
 		while (true) {
 			val (row,col) = findFirstRemovableRoll(matrix)
 			if (row == -1 && col == -1) {
