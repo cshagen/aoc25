@@ -61,7 +61,6 @@ fun emptyColumn(matrix: MutableList<CharArray>, col: Int) : Boolean {
 
 fun getNumber(matrix: MutableList<CharArray>, col: Int) : Int {
 	var num = 0
-	
 	for (i in 0 until matrix.size-1) {
 		if (matrix[i][col] in '0'..'9') num = num*10 + (matrix[i][col].digitToInt())
 	} 
