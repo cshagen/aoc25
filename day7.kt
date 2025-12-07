@@ -28,10 +28,9 @@ fun part2(lines: List<String>): Long {
 	var result = 1L
 	var matrix  = lines.map { line -> line.toCharArray()}
 	val width = matrix[0].size
-	var beams = mutableMapOf<Int,Long>()
-	for (col in 0 until matrix[0].size) {
-		beams[col] = if (matrix[0][col] == 'S') 1L else 0L
-	}
+	var beams  = matrix[0].mapIndexed { col, c -> 
+			col to if (c == 'S') 1L else 0L
+		}.toMap().toMutableMap()
 	for (row in matrix.slice(1 until matrix.size)) {
 		var newBeams = beams.toMutableMap()
 		for ((beam, count) in beams) {
