@@ -53,7 +53,18 @@ fun part1(lines: List<String>): Int {
 	//presents.forEach {entry ->
 		//println("[${entry.key}] ${entry.value.lines}")
 	//}
+	regions.forEach { a ->
+		a.print()
+		println(a.preCheck())
+	}
 	var result = 0
+	regions.forEach { a ->
+		a.print()
+		if (a.preCheck()) {
+			result += 1
+		}
+	}
+	return result
 	for (i in 0 until 3) {
 		println ("Checking region $i")
 		if ( regions[i].search()) {
@@ -119,6 +130,17 @@ class Present {
 		}
 		return p
 	}
+	fun summarize() : Int {
+		var result = 0
+		for (row in lines) {
+			for (cell in row) {
+				if (cell == '#') {
+					result += 1
+				}
+			}
+		}
+		return result
+	}
 }
 
 class Region {
@@ -127,6 +149,16 @@ class Region {
 	var counts = mutableListOf<Int>()
 	fun print() {
 		println ("Region - width: $width, height: $height, counts: $counts")
+	}
+
+	fun preCheck () : Boolean {
+		var sum = 0
+		for (id in 0 until counts.size) {
+			val p = presents[Pair(id,0)]!!
+			sum += counts[id]!! * p.summarize()
+		}
+		println ("area: ${width * height}, sum of presents: $sum")
+		return (sum <= width*height)
 	}
 
 	fun search() : Boolean {
@@ -215,7 +247,55 @@ class Region {
 		return false
 	}
 }
-
+/*
+fun searchIterative (counts: List<Int>, done: Set<Position>, todo: List<Int>, tried: Set<Position>) : Boolean {
+		if (todo.size == 0) {
+			println("Found solution:")
+			for (pos in done) {
+				println("ID: ${pos.id}, Dir: ${pos.direction}, X: ${pos.x}, y: ${pos.y}")
+			}
+			return true
+		}
+		if (done.size == 0) println ("")
+		
+		
+		 
+		for (pCount in counts) {																			// all present groups
+			for (id in 0 until pCount) {																	// all presents
+				for (direction in startDir..3) { 													// all directions
+					val p = presents[Pair(id,direction)]!!
+					for (newX in 0..width - p.width) { 								// all x positions
+						for (newY in 0..height - p.height) { 						// all y positions
+							val pos = Position(id, direction, newX,newY)
+							if (!noGo.contains(pos)) {
+								trialCounter++
+								var overlap = false
+								for (pos1 in done) {
+									if (overlaps (pos, pos1)) {
+										overlap = true
+										noGo.add(pos)
+										break
+									} 
+								}
+								if (!overlap) {
+									noGo.add(pos)
+									if (searchRecursive (done + pos, todo.slice(1..todo.size -1), noGo)) {
+										return true
+									}	else {
+										noGo.add(pos)
+										//println(noGo.size)
+									}
+							} 
+						
+					}
+				}
+			}
+			//println(noGo.size)
+		}
+		return false
+	}
+	*/
+//}
 data class Position (val id: Int, val direction: Int, val x: Int, val y: Int)
 
 fun overlaps (pos1: Position, pos2: Position) : Boolean {
